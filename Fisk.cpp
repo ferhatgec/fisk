@@ -16,10 +16,15 @@
 	Flash drive support.
 */
 
+void HelpFunction(char* argument) {
+	std::cout << argument << " [argument]\n" << 
+	"[argument]\n" << 
+	"--i | --info"; 
+}
+
 void CLIBar(long free, long available) {
 	long data = free - available;
-	long cli = free / data;
-	
+
 	unsigned q = 100 - data;
 	
 	for(unsigned var = 0; var < q; var++) {
@@ -35,10 +40,27 @@ void CLIBar(long free, long available) {
 	RESETB();
 }
 
-int main(int argc, char** argv) {
-	std::filesystem::space_info main = std::filesystem::space("/");
+void Detect(std::string path) {
+	std::filesystem::space_info main = std::filesystem::space(path);
 
+	std::cout << "Main Disk:\n";
 	CLIBar(main.free / 1000000000, main.available / 1000000000);
+}
+
+int main(int argc, char** argv) {
+	if(argc == 1) {
+		Detect("/");		
+		std::cout << "\n";
+		return 0;
+	}
+
+	std::string argument(argv[1]);
+
+	if(argument == "--h" || argument == "--help") {
+		HelpFunction(argv[0]);
+	}
 	
 	std::cout << "\n";
+	
+	return 0;		
 }
