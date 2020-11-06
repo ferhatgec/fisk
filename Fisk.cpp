@@ -55,6 +55,7 @@ void Info(std::string path) {
 	else
 		std::cout << "Path: " << path + "\n";
 		
+	std::cout << "Capacity: " << main.capacity / 1000000000 << "-GB\n";		
 	std::cout << "Free: " << main.free / 1000000000 << "-GB\n";
 	std::cout << "Available: " <<  main.available / 1000000000 << "-GB";
 }
