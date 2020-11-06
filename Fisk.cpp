@@ -50,7 +50,11 @@ void Detect(std::string path) {
 void Info(std::string path) {	
 	std::filesystem::space_info main = std::filesystem::space(path);
 
-	std::cout << "Main Disk:\n";
+	if(path == "/")
+		std::cout << "Main Disk:\n";
+	else
+		std::cout << "Path: " << path + "\n";
+		
 	std::cout << "Free: " << main.free / 1000000000 << "-GB\n";
 	std::cout << "Available: " <<  main.available / 1000000000 << "-GB";
 }
@@ -67,9 +71,14 @@ int main(int argc, char** argv) {
 	if(argument == "--h" || argument == "--help") {
 		HelpFunction(argv[0]);
 	} else if(argument == "--i" || argument == "--info") {
-		Info("/");
+		if(argc == 2) 
+			Info("/");
+		else if(argc == 3) {
+			std::string argument_path(argv[2]);
+			Info(argument_path);		
+		}
 	}
-	
+		
 	std::cout << "\n";
 	
 	return 0;		
