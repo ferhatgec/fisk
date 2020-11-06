@@ -10,16 +10,22 @@
 
 #include <Colorized.hpp>
 
+
+#define FISK_VERSION "0.1-beta-1"
+
 /* TODO:
 	Disk Info without progress bars.
 	Disk compare support.
 	Flash drive support.
 */
 
+
 void HelpFunction(char* argument) {
-	std::cout << argument << " [argument]\n" << 
+	std::cout << "Fegeya Fisk : Simple disk analyzer\n" <<
+	argument << " [argument]\n" << 
 	"[argument]\n" << 
-	"--i | --info\n" << "--p | --perms"; 
+	"--i | --info\n" << "--p | --perms\n" << 
+	"--v | --version"; 
 }
 
 void CLIBar(long free, long available) {
@@ -109,6 +115,8 @@ int main(int argc, char** argv) {
 			std::string argument_path(argv[2]);
 			Permissions(argument_path);
 		}	
+	} else if(argument == "--v" || argument == "--version") {
+		std::cout << "Fisk Version: " << FISK_VERSION; 
 	}
 		
 	std::cout << "\n";
