@@ -19,7 +19,7 @@
 void HelpFunction(char* argument) {
 	std::cout << argument << " [argument]\n" << 
 	"[argument]\n" << 
-	"--i | --info"; 
+	"--i | --info\n" << "--p | --perms"; 
 }
 
 void CLIBar(long free, long available) {
@@ -60,6 +60,30 @@ void Info(std::string path) {
 	std::cout << "Available: " <<  main.available / 1000000000 << "-GB";
 }
 
+void Perms(std::filesystem::perms p) {
+    std::cout << ((p & std::filesystem::perms::owner_read) != std::filesystem::perms::none ? "r" : "-")
+              << ((p & std::filesystem::perms::owner_write) != std::filesystem::perms::none ? "w" : "-")
+              << ((p & std::filesystem::perms::owner_exec) != std::filesystem::perms::none ? "x" : "-")
+              << ((p & std::filesystem::perms::group_read) != std::filesystem::perms::none ? "r" : "-")
+              << ((p & std::filesystem::perms::group_write) != std::filesystem::perms::none ? "w" : "-")
+              << ((p & std::filesystem::perms::group_exec) != std::filesystem::perms::none ? "x" : "-")
+              << ((p & std::filesystem::perms::others_read) != std::filesystem::perms::none ? "r" : "-")
+              << ((p & std::filesystem::perms::others_write) != std::filesystem::perms::none ? "w" : "-")
+              << ((p & std::filesystem::perms::others_exec) != std::filesystem::perms::none ? "x" : "-");
+}
+
+void Permissions(std::string path) {	
+	std::filesystem::space_info main = std::filesystem::space(path);
+
+	if(path == "/") {
+		std::cout << "Main Disk: ";
+		Perms(std::filesystem::status("/").permissions());
+	} else {
+		std::cout << "Path: ";
+		Perms(std::filesystem::status(path).permissions());
+	}
+}
+
 int main(int argc, char** argv) {
 	if(argc == 1) {
 		Detect("/");		
@@ -78,6 +102,13 @@ int main(int argc, char** argv) {
 			std::string argument_path(argv[2]);
 			Info(argument_path);		
 		}
+	} else if(argument == "--p" || argument == "--perms") {
+		if(argc == 2)
+			Permissions("/");
+		else if(argc == 3) {
+			std::string argument_path(argv[2]);
+			Permissions(argument_path);
+		}	
 	}
 		
 	std::cout << "\n";
