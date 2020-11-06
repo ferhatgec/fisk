@@ -47,6 +47,14 @@ void Detect(std::string path) {
 	CLIBar(main.free / 1000000000, main.available / 1000000000);
 }
 
+void Info(std::string path) {	
+	std::filesystem::space_info main = std::filesystem::space(path);
+
+	std::cout << "Main Disk:\n";
+	std::cout << "Free: " << main.free / 1000000000 << "-GB\n";
+	std::cout << "Available: " <<  main.available / 1000000000 << "-GB";
+}
+
 int main(int argc, char** argv) {
 	if(argc == 1) {
 		Detect("/");		
@@ -58,6 +66,8 @@ int main(int argc, char** argv) {
 
 	if(argument == "--h" || argument == "--help") {
 		HelpFunction(argv[0]);
+	} else if(argument == "--i" || argument == "--info") {
+		Info("/");
 	}
 	
 	std::cout << "\n";
