@@ -14,9 +14,9 @@
 #define FISK_VERSION "0.1-beta-1"
 
 /* TODO:
-	Disk Info without progress bars.
 	Disk compare support.
 	Flash drive support.
+	Detect if is file / directory.
 */
 
 
@@ -25,7 +25,7 @@ void HelpFunction(char* argument) {
 	argument << " [argument]\n" << 
 	"[argument]\n" << 
 	"--i | --info\n" << "--p | --perms\n" << 
-	"--v | --version"; 
+	"--s | --size\n" << "--v | --version"; 
 }
 
 void CLIBar(long free, long available) {
@@ -64,6 +64,16 @@ void Info(std::string path) {
 	std::cout << "Capacity: " << main.capacity / 1000000000 << "-GB\n";		
 	std::cout << "Free: " << main.free / 1000000000 << "-GB\n";
 	std::cout << "Available: " <<  main.available / 1000000000 << "-GB";
+}
+
+void Size(std::string path) {	
+	std::filesystem::path _path = std::filesystem::current_path() / path;
+	
+	try {
+        std::cout << "Size: " << std::filesystem::file_size(_path) << " byte";
+    } catch(std::filesystem::filesystem_error& e) {
+        std::cout << "Huh!: " << e.what();
+    }    
 }
 
 void Perms(std::filesystem::perms p) {
@@ -115,6 +125,13 @@ int main(int argc, char** argv) {
 			std::string argument_path(argv[2]);
 			Permissions(argument_path);
 		}	
+	} else if(argument == "--s" || argument == "--size") {
+		if(argc == 2)
+			std::cout << "Tip: Use with file";
+		else if(argc == 3) {
+			std::string argument_path(argv[2]);
+			Size(argument_path);
+		}
 	} else if(argument == "--v" || argument == "--version") {
 		std::cout << "Fisk Version: " << FISK_VERSION; 
 	}
